@@ -17,7 +17,6 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
   String? selectedGender;
   String? selectedSpecialist;
 
-
   @override
   void dispose() {
     nameController.dispose();
@@ -28,15 +27,48 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
     super.dispose();
   }
 
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (pickedDate != null) {
+      setState(() {
+        dateController.text = "${pickedDate.toLocal()}".split(' ')[0];
+      });
+    }
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (pickedTime != null) {
+      setState(() {
+        timeController.text = pickedTime.format(context);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:  Color(0xff7E9680),
+        backgroundColor: Color(0xff7E9680),
         title: Text(
-          "Booking",
-          style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
+          "Appointment",
+          style: TextStyle(
+              fontSize: 22, fontWeight: FontWeight.bold, color: Colors.white),
         ),
+          actions: [
+            Icon(Icons.search, color: Colors.white),
+            SizedBox(width: 5,),
+            Icon(Icons.more_vert_sharp, color: Colors.white),
+            SizedBox(width: 8),
+          ]
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -54,7 +86,7 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                SizedBox(height: 20),
+                SizedBox(height: 10),
                 Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12.0),
@@ -197,7 +229,8 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
                           selectedSpecialist = value!;
                         });
                       },
-                      items: <String>['A', 'B', 'C', 'D', 'E'].map((String value) {
+                      items:
+                      <String>['Dr. Gautham Chandran', 'Dr. Puja Roy', 'Dr. Alia Chowduri', 'Dr. Kalam Hasan', 'Dr. Nasrin Sultana'].map((String value) {
                         return DropdownMenuItem<String>(
                           value: value,
                           child: Text(value),
@@ -206,7 +239,6 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
                     ),
                   ),
                 ),
-
                 SizedBox(height: 12),
                 Container(
                   decoration: BoxDecoration(
@@ -215,6 +247,8 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
                   ),
                   child: TextField(
                     controller: dateController,
+                    readOnly: true,
+                    onTap: () => _selectDate(context),
                     decoration: InputDecoration(
                       suffixIcon: Icon(Icons.date_range, color: Colors.black),
                       contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -237,8 +271,11 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
                   ),
                   child: TextField(
                     controller: timeController,
+                    readOnly: true,
+                    onTap: () => _selectTime(context),
                     decoration: InputDecoration(
-                      suffixIcon: Icon(Icons.access_time_filled, color: Colors.black),
+                      suffixIcon:
+                      Icon(Icons.access_time_filled, color: Colors.black),
                       contentPadding: EdgeInsets.symmetric(horizontal: 16.0),
                       labelText: 'Time Selection',
                       labelStyle: TextStyle(
@@ -258,8 +295,7 @@ class _AppointmentBookingState extends State<AppointmentBooking> {
                     style: TextButton.styleFrom(
                       backgroundColor: Colors.white,
                     ),
-                    onPressed: () {
-                       },
+                    onPressed: () {},
                     child: Text(
                       "Confirm Booking",
                       style: TextStyle(

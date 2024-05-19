@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'Maindeshboard.dart';
 import 'package:http/http.dart' as http;
 
+import 'api.dart';
 import 'model_loin.dart';
 
 class loginScreen extends StatefulWidget {
@@ -27,7 +28,7 @@ class _loginScreenState extends State<loginScreen> {
 
      print("call");
      final response = await http.post(
-       Uri.parse("http://192.168.0.5/Medical_Service/login.php"),
+       Uri.parse("http://${API_Class().api}/Medical_Service/login.php"),
        body: jsonEncode(<String, dynamic>{
          "phone_or_gmail": phoneOrGmailController.text,
        }),
@@ -40,7 +41,7 @@ class _loginScreenState extends State<loginScreen> {
      if (loginScreen.password==passwordController.text){
        Navigator.push(
            context,
-           MaterialPageRoute(builder: (context) => const MainDashboard())
+           MaterialPageRoute(builder: (context) =>  MainDashboard(loginScreen: loginScreen,))
        );
 
      }

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:medicalservice/Welcomepage.dart';
 
+
 import 'DoctorProfile.dart';
+import 'Doctorlist.dart';
 import 'Maindeshboard.dart';
 import 'MedicalHistory.dart';
 
@@ -26,7 +28,7 @@ class MyApp extends StatelessWidget {
         fontFamily: ('inter'),
         useMaterial3: true,
       ),
-      home:const Welcomepage(),
+      home: Welcomepage(),
     );
   }
 }

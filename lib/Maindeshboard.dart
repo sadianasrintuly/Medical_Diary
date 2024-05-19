@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 
 import 'Appointmentbooking.dart';
 import 'DoctorProfile.dart';
+import 'Doctorlist.dart';
 import 'MedicalHistory.dart';
+import 'model_loin.dart';
 import 'regScreen.dart';
 
 class MainDashboard extends StatefulWidget {
-  const MainDashboard({Key? key}) : super(key: key);
+  MainDashboard({required this.loginScreen});
+
+  LoginScreen loginScreen;
 
   @override
   State<MainDashboard> createState() => _MainDashboardState();
@@ -30,9 +34,9 @@ class _MainDashboardState extends State<MainDashboard> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 80.0),
+              padding: const EdgeInsets.only(top: 85.0),
               child: Text(
-                'Dashboard ...',
+                'HOME ...',
                 style: TextStyle(
                   fontSize: 35,
                   color: Colors.white,
@@ -41,7 +45,7 @@ class _MainDashboardState extends State<MainDashboard> {
               ),
             ),
 
-            const SizedBox(height: 80),
+            const SizedBox(height: 130),
 
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -50,24 +54,24 @@ class _MainDashboardState extends State<MainDashboard> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const MedicalHistory()),
+                      MaterialPageRoute(builder: (context) => MedicalHistory(loginScreen: widget.loginScreen,)),
                     );
                   },
-                  child: _buildImageOption('assets/Medical history.png', "Medical History"),
+                  child: _buildImageOption('assets/Medical history.png', "\n Medical History"),
                 ),
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const DoctorProfile()),
+                      MaterialPageRoute(builder: (context) =>  Doctorlist()),
                     );
                   },
-                  child: _buildImageOption('assets/Doctor Profile.png', "Doctor's Profile"),
+                  child: _buildImageOption('assets/Doctor Profile.png', "\n Doctor's List"),
                 ),
               ],
             ),
 
-            const SizedBox(height: 40), // Adjusted the height
+            const SizedBox(height: 25), // Adjusted the height
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -75,20 +79,10 @@ class _MainDashboardState extends State<MainDashboard> {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const AppointmentBooking()),
-                    );
-                  },
-                  child:
-                _buildImageOption('assets/Appointment Booking.png', "Appointment\nBooking"),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
                       MaterialPageRoute(builder: (context) => const DoctorProfile()),
                     );
                   },
-                  child:_buildImageOption('assets/Telemedicine.png', "Telemedicine"),
+                  child:_buildImageOption('assets/Telemedicine.png', "\n Telemedicine"),
                 ),
               ],
             ),
@@ -104,14 +98,14 @@ class _MainDashboardState extends State<MainDashboard> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(20),
       ),
-      height: 168,
+      height: 180,
       width: 185,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Flexible(
             child: SizedBox(
-              height: 75, // Set the desired height for the image
+              height: 85, // Set the desired height for the image
               width: 90, // Set the desired width for the image
               child: Image.asset(
                 imagePath,

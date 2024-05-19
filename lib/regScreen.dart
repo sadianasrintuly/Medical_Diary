@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:medicalservice/api.dart';
 
 import 'package:medicalservice/loginScreen.dart';
 
@@ -14,7 +15,7 @@ class RegScreen extends StatelessWidget {
   Future<void> insertApi() async {
     try {
       final response = await http.post(
-        Uri.parse("http://192.168.0.5/Medical_Service/registration.php"),
+        Uri.parse("http://${API_Class().api}/Medical_Service/registration.php"),
         body: jsonEncode(<String, dynamic>{
           "name": nameController.text,
           "phone_or_gmail": phoneOrGmailController.text,
