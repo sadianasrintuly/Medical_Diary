@@ -7,38 +7,36 @@ import 'package:medicalservice/api.dart';
 
 import 'model_loin.dart';
 
-
 class MedicalHistory extends StatefulWidget {
   MedicalHistory({required this.loginScreen});
 
   LoginScreen loginScreen;
-
 
   @override
   State<MedicalHistory> createState() => _MedicalHistoryState();
 }
 
 class _MedicalHistoryState extends State<MedicalHistory> {
-
-
   File? _image;
   String profileimage_Name = '';
+  bool showImageAbove = true;
+
   Future cameraImage() async {
     final pickedFile =
     await ImagePicker().pickImage(source: ImageSource.camera);
     setState(() {
       if (pickedFile != null) {
-
         _image = File(pickedFile.path);
-        profileimage_Name = pickedFile.path.split('/').last;
+        profileimage_Name = pickedFile.path
+            .split('/')
+            .last;
       } else {
         Text("data");
       }
     });
 
-    print("image_name"+ profileimage_Name);
+    print("image_name" + profileimage_Name);
     getUploadImg(_image!);
-
   }
 
   Future galleryImage() async {
@@ -47,65 +45,62 @@ class _MedicalHistoryState extends State<MedicalHistory> {
     setState(() {
       if (pickedFile != null) {
         _image = File(pickedFile.path);
-        profileimage_Name = pickedFile.path.split('/').last;
+        profileimage_Name = pickedFile.path
+            .split('/')
+            .last;
       } else {
         Text("data");
       }
     });
-    print("image_name"+ profileimage_Name);
+    print("image_name" + profileimage_Name);
     getUploadImg(_image!);
   }
 
   Future getUploadImg(File imageFile) async {
-
-    // var url = Uri.parse(MyApi.updateProfileData);
-    // Map<String, String> headers = {HttpHeaders.authorizationHeader: 'Bearer ${controller.token}',};
-
-
-    final request =
-    http.MultipartRequest('POST', Uri.parse("https://${API_Class().api}/Medical_Service/image_upload.php"))
-    //..fields['profile_id']=controller.myId.toString()..headers.addAll(headers)
+    final request = http.MultipartRequest(
+      'POST',
+      Uri.parse("https://${API_Class().api}/Medical_Service/image_upload.php"),
+    )
       ..files.add(await http.MultipartFile.fromPath('photo', imageFile.path));
 
-    //for test
-    try{
+    try {
       var response = await request.send();
 
       if (response.statusCode == 200) {
         final snackBar = SnackBar(
           content: Text('Image Uploaded'),
-          duration: Duration(seconds: 3), // Adjust the duration
+          duration: Duration(seconds: 3),
         );
 
         prescription_data();
 
         ScaffoldMessenger.of(context).showSnackBar(snackBar);
         print("image uploaded");
-      }else{
-        //Get.snackbar('Failed', 'Please check in web');
-        print("Image Uploaded Failed");
+
+        // Update the state to show the image
+        setState(() {
+          showImageAbove = !showImageAbove;
+        });
+      } else {
+        print("Image Upload Failed");
       }
-    }catch(e){
-      //Get.snackbar('Exception', e.toString());
+    } catch (e) {
       print('my exception: $e');
     }
-
   }
 
-
-  prescription_data()async {
+  Future prescription_data() async {
     final response = await http.post(
       Uri.parse("https://${API_Class().api}/Medical_Service/registration.php"),
       body: jsonEncode(<String, dynamic>{
-        "user_id" : widget.loginScreen.phoneOrGmail,
-        "img" : profileimage_Name,
-        "img_of" : "Prescription"
+        "user_id": widget.loginScreen.phoneOrGmail,
+        "img": profileimage_Name,
+        "img_of": "Prescription"
       }),
     );
 
     print(response.body);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +119,7 @@ class _MedicalHistoryState extends State<MedicalHistory> {
         child: Column(
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 80.0),
+              padding: const EdgeInsets.only(top: 60.0),
               child: Text(
                 'Medical History',
                 style: TextStyle(
@@ -134,13 +129,14 @@ class _MedicalHistoryState extends State<MedicalHistory> {
                 ),
               ),
             ),
-            const SizedBox(height: 70,),
-            const SizedBox(height: 50), // Adjusted the height
+            const SizedBox(height: 30),
+            if (showImageAbove && _image != null) buildImagePreview(),
+            const SizedBox(height: 30), // Adjusted the height
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -188,29 +184,39 @@ class _MedicalHistoryState extends State<MedicalHistory> {
                         );
                       },
                     );
-
                   },
-                    child: _buildImageOption(
-                        'assets/Upload Prescription.png',
-                        "Upload \n Prescription"
-                    )
+                  child: _buildImageOption(
+                    'assets/Upload Prescription.png',
+                    "Upload \n Prescription",
+                  ),
                 ),
-                _buildImageOption('assets/View Medical Record.png', "View Medical Record"),
+                _buildImageOption(
+                    'assets/View Medical Record.png', "View Medical Record"),
               ],
             ),
             const SizedBox(height: 25), // Adjusted the height
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildImageOption('assets/Add New Record.png', "Add New \n Record"),
-
+                _buildImageOption(
+                    'assets/Add New Record.png', "Add New \n Record"),
               ],
             ),
+            if (!showImageAbove && _image != null) buildImagePreview(),
           ],
         ),
       ),
     );
   }
+
+  Widget buildImagePreview() {
+    return Image.file(
+      _image!,
+      height: 100,
+      width: 200,
+    );
+  }
+
 
   Widget _buildImageOption(String imagePath, String text) {
     return Container(
