@@ -9,7 +9,4 @@
     <img src="image/6.png" alt="6th Page" width="200"/>
     <img src="image/7.png" alt="7th Page" width="200"/>
     <img src="image/8.png" alt="8th Page" width="200"/>
-    <img src="image/9.png" alt="9th Page" width="200"/>
-    <img src="image/10.png" alt="10th Page" width="200"/>
-    <img src="image/11.png" alt="11th Page" width="200"/>
   </div>
